@@ -3,7 +3,23 @@
 <buildprofiles xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/build-profiles.xsd"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <variables></variables>
+  <variables>
+    <header-logo>messless-logo-wide.png</header-logo>
+    <custom-favicons>messless-logo-square.png</custom-favicons>
+
+    <primary-color>blueberry</primary-color>
+
+    <download-title>Go to Github</download-title>
+    <download-page>https://github.com/spg-eventful</download-page>
+    <showDownloadButton>true</showDownloadButton>
+  </variables>
+
+  <footer>
+    <notice>MESSless, EVENTful and PANICless are fictive companies and projects for a school
+      assignment. We are not associated with any real companies called the same.
+    </notice>
+  </footer>
+
   <build-profile instance="msls">
     <variables>
       <noindex-content>true</noindex-content>
