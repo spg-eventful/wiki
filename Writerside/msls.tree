@@ -4,7 +4,9 @@
 
 <instance-profile id="msls"
                  name="Documentation"
-                 start-page="starter-topic.md">
+  start-page="our-ruleset-conventions.md">
 
-    <toc-element topic="starter-topic.md"/>
+  <toc-element topic="our-ruleset-conventions.md"/>
+  <toc-element topic="Domain-Model.md"/>
+  <toc-element topic="writerside-docs.md"/>
 </instance-profile>

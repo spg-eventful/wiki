@@ -1,0 +1,69 @@
+@startuml
+hide empty methods
+hide empty attributes
+
+title MESSless Domain Layer Model
+note "All fields not marked with <<nullable>> are not nullable" as NullConvention
+
+entity User<Entity> {
+    email: Email
+    phone: String
+    role: Role
+    firstName: FirstName
+    lastName: LastName
+    password: Password <<encrypted>>
+    ---
+    createdAt: Timestamp
+    updatedAt: Timestamp <<nullable>>
+    deletedAt: Timestamp <<nullable>>
+}
+
+enum Roles {
+  Admin
+  CompanyAdmin
+  Manager
+  Worker
+  StageHand
+}
+
+entity Warehouse<Entity> {
+    label: String
+    location: Location
+    ---
+    createdAt: Timestamp
+    updatedAt: Timestamp <<nullable>>
+    deletedAt: Timestamp <<nullable>>
+}
+
+entity Event<Entity> {
+    label: String
+    location: Location
+    ---
+    createdAt: Timestamp
+    updatedAt: Timestamp <<nullable>>
+    deletedAt: Timestamp <<nullable>>
+}
+
+entity Equipment<Entity> {
+    label: String
+    location: Location
+    ---
+    createdAt: Timestamp
+    updatedAt: Timestamp <<nullable>>
+    deletedAt: Timestamp <<nullable>>
+}
+
+entity Company<Entity> {
+    label: String
+    location: Location
+    ---
+    createdAt: Timestamp
+    updatedAt: Timestamp <<nullable>>
+    deletedAt: Timestamp <<nullable>>
+}
+
+entity Location <Value Object> <<(V, EEAAEE), embeddable>> {
+  lat: float
+  long: float
+}
+@enduml
