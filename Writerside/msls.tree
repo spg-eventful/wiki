@@ -6,7 +6,8 @@
                  name="Documentation"
   start-page="our-ruleset-conventions.md">
 
-  <toc-element topic="our-ruleset-conventions.md"/>
+    <toc-element topic="statusbericht-kritik.md"/>
+    <toc-element topic="our-ruleset-conventions.md"/>
   <toc-element topic="Domain-Model.md"/>
   <toc-element topic="writerside-docs.md"/>
 </instance-profile>
