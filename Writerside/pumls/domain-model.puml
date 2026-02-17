@@ -6,19 +6,24 @@ title MESSless Domain Layer Model
 note "All fields not marked with <<nullable>> are not nullable" as NullConvention
 
 entity User<Entity> {
-    email: Email
-    phone: String
-    role: Role
-    firstName: FirstName
-    lastName: LastName
-    password: Password <<encrypted>>
-    ---
-    createdAt: Timestamp
-    updatedAt: Timestamp <<nullable>>
-    deletedAt: Timestamp <<nullable>>
+  email: Email
+  password: Password <<encrypted>>
+  role: UserRole
+  phone: String
+  firstName: String
+  lastName: String
+  ---
+  createdAt: Timestamp
+  updatedAt: Timestamp <<nullable>>
+  deletedAt: Timestamp <<nullable>>
 }
 
-enum Roles {
+entity EmployedAtEvent {
+  user: User
+  event : Event
+}
+
+enum UserRole {
   Admin
   CompanyAdmin
   Manager
@@ -26,44 +31,68 @@ enum Roles {
   StageHand
 }
 
+abstract Loggable<Abstract> {
+  label: String
+  location: Location
+  ---
+  createdAt: Timestamp
+  updatedAt: Timestamp <<nullable>>
+  deletedAt: Timestamp <<nullable>>
+}
+
 entity Warehouse<Entity> {
-    label: String
-    location: Location
-    ---
-    createdAt: Timestamp
-    updatedAt: Timestamp <<nullable>>
-    deletedAt: Timestamp <<nullable>>
+  belongsTo: Company
 }
 
 entity Event<Entity> {
-    label: String
-    location: Location
-    ---
-    createdAt: Timestamp
-    updatedAt: Timestamp <<nullable>>
-    deletedAt: Timestamp <<nullable>>
 }
 
 entity Equipment<Entity> {
-    label: String
-    location: Location
-    ---
-    createdAt: Timestamp
-    updatedAt: Timestamp <<nullable>>
-    deletedAt: Timestamp <<nullable>>
+  label: String
+  location: Location
+  belongsTo: Warehouse
+  ---
+  createdAt: Timestamp
+  updatedAt: Timestamp <<nullable>>
+  deletedAt: Timestamp <<nullable>>
 }
 
 entity Company<Entity> {
-    label: String
-    location: Location
-    ---
-    createdAt: Timestamp
-    updatedAt: Timestamp <<nullable>>
-    deletedAt: Timestamp <<nullable>>
+  label: String
+  location: Location
+  ownedBy: User
+  ---
+  createdAt: Timestamp
+  updatedAt: Timestamp <<nullable>>
+  deletedAt: Timestamp <<nullable>>
+}
+
+entity TechnicalLogEntry<Entity> {
+  attachedTo: Equipment
+  loggable: Loggable
+  ---
+  createdAt: Timestamp
+  updatedAt: Timestamp <<nullable>>
+  deletedAt: Timestamp <<nullable>>
 }
 
 entity Location <Value Object> <<(V, EEAAEE), embeddable>> {
   lat: float
   long: float
 }
+
+' relations
+User -down-> UserRole
+EmployedAtEvent -left-> User
+EmployedAtEvent -right-> Event
+Company -down-> User
+
+Equipment -down-> Location
+TechnicalLogEntry --> Equipment
+TechnicalLogEntry --> Loggable
+
+Loggable --|> Warehouse
+Loggable --|> Event
+
+Equipment ---> Warehouse
 @enduml
