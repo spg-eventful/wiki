@@ -1,0 +1,99 @@
+@startuml
+hide empty methods
+hide empty attributes
+
+title MESSless Domain Layer Model
+note "All fields not marked with <<nullable>> are not nullable" as NullConvention
+
+entity User<Entity> {
+  email: Email
+  password: Password <<encrypted>>
+  role: UserRole
+  phone: String
+  firstName: String
+  lastName: String
+  ---
+  createdAt: Timestamp
+  updatedAt: Timestamp <<nullable>>
+  deletedAt: Timestamp <<nullable>>
+}
+
+enum UserRole {
+  Admin
+  CompanyAdmin
+  Manager
+  Worker
+  StageHand
+}
+
+abstract Loggable<Abstract> {
+  label: String
+  location: Point
+  ---
+  createdAt: Timestamp
+  updatedAt: Timestamp <<nullable>>
+  deletedAt: Timestamp <<nullable>>
+}
+
+entity Warehouse<Entity> {
+}
+
+entity Event<Entity> {
+}
+
+
+entity EquipmentStorage<Entity> {
+}
+
+entity Equipment<Entity> {
+  label: String
+  location: Point
+  belongsTo: Warehouse
+  storage: EquipmentStorage?
+  ---
+  createdAt: Timestamp
+  updatedAt: Timestamp <<nullable>>
+  deletedAt: Timestamp <<nullable>>
+}
+
+entity Company<Entity> {
+  label: String
+  location: Point
+  warehouses: Warehouse[]
+  employees: User[]
+  ---
+  createdAt: Timestamp
+  updatedAt: Timestamp <<nullable>>
+  deletedAt: Timestamp <<nullable>>
+}
+
+entity TechnicalLogEntry<Entity> {
+  attachedTo: Equipment
+  loggable: Loggable
+  by: User
+  isCheckIn: bool
+  ---
+  createdAt: Timestamp
+  updatedAt: Timestamp <<nullable>>
+  deletedAt: Timestamp <<nullable>>
+}
+
+' relations
+TechnicalLogEntry --> Equipment
+TechnicalLogEntry --> Loggable
+TechnicalLogEntry -right-> User
+
+Loggable --|> Warehouse
+Loggable -up-|> Event
+Loggable -down-|> EquipmentStorage
+
+Equipment --> EquipmentStorage
+
+Equipment ---> Warehouse
+
+User --right> UserRole
+
+Warehouse --right* Company
+User --down* Company
+
+@enduml
