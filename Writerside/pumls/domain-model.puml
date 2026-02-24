@@ -18,11 +18,6 @@ entity User<Entity> {
   deletedAt: Timestamp <<nullable>>
 }
 
-entity EmployedAtEvent {
-  user: User
-  event : Event
-}
-
 enum UserRole {
   Admin
   CompanyAdmin
@@ -33,7 +28,7 @@ enum UserRole {
 
 abstract Loggable<Abstract> {
   label: String
-  location: Location
+  location: Point
   ---
   createdAt: Timestamp
   updatedAt: Timestamp <<nullable>>
@@ -41,16 +36,20 @@ abstract Loggable<Abstract> {
 }
 
 entity Warehouse<Entity> {
-  belongsTo: Company
 }
 
 entity Event<Entity> {
 }
 
+
+entity EquipmentStorage<Entity> {
+}
+
 entity Equipment<Entity> {
   label: String
-  location: Location
+  location: Point
   belongsTo: Warehouse
+  storage: EquipmentStorage?
   ---
   createdAt: Timestamp
   updatedAt: Timestamp <<nullable>>
@@ -59,8 +58,9 @@ entity Equipment<Entity> {
 
 entity Company<Entity> {
   label: String
-  location: Location
-  ownedBy: User
+  location: Point
+  warehouses: Warehouse[]
+  employees: User[]
   ---
   createdAt: Timestamp
   updatedAt: Timestamp <<nullable>>
@@ -70,29 +70,30 @@ entity Company<Entity> {
 entity TechnicalLogEntry<Entity> {
   attachedTo: Equipment
   loggable: Loggable
+  by: User
+  isCheckIn: bool
   ---
   createdAt: Timestamp
   updatedAt: Timestamp <<nullable>>
   deletedAt: Timestamp <<nullable>>
 }
 
-entity Location <Value Object> <<(V, EEAAEE), embeddable>> {
-  lat: float
-  long: float
-}
-
 ' relations
-User -down-> UserRole
-EmployedAtEvent -left-> User
-EmployedAtEvent -right-> Event
-Company -down-> User
-
-Equipment -down-> Location
 TechnicalLogEntry --> Equipment
 TechnicalLogEntry --> Loggable
+TechnicalLogEntry -right-> User
 
 Loggable --|> Warehouse
-Loggable --|> Event
+Loggable -up-|> Event
+Loggable -down-|> EquipmentStorage
+
+Equipment --> EquipmentStorage
 
 Equipment ---> Warehouse
+
+User --right> UserRole
+
+Warehouse --right* Company
+User --down* Company
+
 @enduml
