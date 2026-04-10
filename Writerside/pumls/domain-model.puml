@@ -30,6 +30,7 @@ entity Loggable {
   label: String
   location: Point
   loggableType: LoggableType
+  companyId: Company
   ---
   createdAt: Timestamp
   updatedAt: Timestamp <<nullable>>
@@ -90,7 +91,9 @@ enum LoggableType {
 TechnicalLogEntry --> Equipment
 TechnicalLogEntry --> Loggable
 TechnicalLogEntry -right-> User
+
 Loggable -left-> LoggableType
+Loggable --up* Company
 
 Warehouse --left* Loggable
 Event --up* Loggable
