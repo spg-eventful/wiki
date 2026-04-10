@@ -26,9 +26,10 @@ enum UserRole {
   StageHand
 }
 
-abstract Loggable<Abstract> {
+entity Loggable {
   label: String
   location: Point
+  loggableType: LoggableType
   ---
   createdAt: Timestamp
   updatedAt: Timestamp <<nullable>>
@@ -36,20 +37,21 @@ abstract Loggable<Abstract> {
 }
 
 entity Warehouse<Entity> {
+  loggable: Loggable
 }
 
 entity Event<Entity> {
+  loggable: Loggable
 }
 
-
 entity EquipmentStorage<Entity> {
+  loggable: Loggable
 }
 
 entity Equipment<Entity> {
   label: String
-  location: Point
   belongsTo: Warehouse
-  storage: EquipmentStorage?
+  isStorage: EquipmentStorage?
   ---
   createdAt: Timestamp
   updatedAt: Timestamp <<nullable>>
@@ -78,14 +80,21 @@ entity TechnicalLogEntry<Entity> {
   deletedAt: Timestamp <<nullable>>
 }
 
+enum LoggableType {
+    Warehouse,
+    Event,
+    EquipmentStorage
+}
+
 ' relations
 TechnicalLogEntry --> Equipment
 TechnicalLogEntry --> Loggable
 TechnicalLogEntry -right-> User
+Loggable -left-> LoggableType
 
-Loggable --|> Warehouse
-Loggable -up-|> Event
-Loggable -down-|> EquipmentStorage
+Warehouse --left* Loggable
+Event --up* Loggable
+EquipmentStorage --down* Loggable
 
 Equipment --> EquipmentStorage
 
